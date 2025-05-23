@@ -115,6 +115,9 @@ char	*get_next_line(int fd)
 		if (!store)
 			return (clean(buf, NULL, NULL, 0));
 	}
+	if (buf)
+		free(buf);
+	return (NULL);
 }
 /*
 int	main(void)
