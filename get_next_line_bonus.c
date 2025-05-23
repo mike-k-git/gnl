@@ -125,7 +125,6 @@ char	*get_next_line(int fd)
 		split_and_return(&store[fd], &output, &buf);
 		if (output && *output)
 			return (output);
-		bytes_read = 0;
 		status = read_into_buffer(fd, &buf, &store[fd], &output);
 		if (status == 0)
 			return (output);
