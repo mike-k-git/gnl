@@ -20,13 +20,13 @@
 char	*get_next_line(int fd);
 char	*append_to_store(char *s, char *b, ssize_t r);
 char	*reallocate_store(char *s, char *nl);
-void	split_and_return(char **s, char **o, char **b);
+void	split_and_return(char **s, char **o);
 int		read_into_buffer(int fd, char **b, char **s, char **o);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-size_t	ft_strlcat(char *dst, char *src, size_t size);
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
 int		init(char **o, char **s, char **b, int fd);
+void	copy_n(char *dest, char *src, size_t n);
+char	*return_and_free_buf(char *buf, char *output);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42

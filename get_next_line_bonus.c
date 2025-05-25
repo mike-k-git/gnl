@@ -22,14 +22,11 @@ char	*append_to_store(char *store_fd, char *buf, ssize_t bytes_read)
 	if (!new_store_fd)
 	{
 		free(store_fd);
-		store_fd = NULL;
 		return (NULL);
 	}
-	if (store_fd)
-		ft_strlcpy(new_store_fd, store_fd, store_fd_len + 1);
-	else
-		new_store_fd[0] = '\0';
-	ft_strlcat(new_store_fd, buf, store_fd_len + bytes_read + 1);
+	copy_n(new_store_fd, store_fd, store_fd_len);
+	copy_n(new_store_fd + store_fd_len, buf, bytes_read);
+	new_store_fd[store_fd_len + bytes_read] = '\0';
 	free(store_fd);
 	store_fd = NULL;
 	return (new_store_fd);
@@ -45,12 +42,11 @@ char	*reallocate_store(char *store_fd, char *new_line)
 	if (!new_store_fd)
 	{
 		free(store_fd);
-		store_fd = NULL;
 		return (NULL);
 	}
-	ft_strlcpy(new_store_fd, new_line + 1, len_till_new_line + 1);
+	copy_n(new_store_fd, new_line + 1, len_till_new_line);
+	new_store_fd[len_till_new_line] = '\0';
 	free(store_fd);
-	store_fd = NULL;
 	return (new_store_fd);
 }
 
@@ -70,7 +66,8 @@ void	split_and_return(char **store_fd, char **output, char **buf)
 			*buf = NULL;
 			return ;
 		}
-		ft_strlcpy(*output, *store_fd, new_line - *store_fd + 2);
+		copy_n(*output, *store_fd, new_line - *store_fd + 1);
+		(*output)[new_line - *store_fd + 1] = '\0';
 		*store_fd = reallocate_store(*store_fd, new_line);
 		if (!*store_fd)
 		{

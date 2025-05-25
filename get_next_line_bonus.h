@@ -22,11 +22,10 @@ char	*append_to_store(char *s, char *b, ssize_t r);
 char	*reallocate_store(char *s, char *nl);
 void	split_and_return(char **s, char **o, char **b);
 int		read_into_buffer(int fd, char **b, char **s, char **o);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-size_t	ft_strlcat(char *dst, char *src, size_t size);
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
 int		init(char **o, char **s, char **b, int fd);
+void	copy_n(char *dest, char *src, size_t n);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
