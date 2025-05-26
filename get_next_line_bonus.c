@@ -28,7 +28,6 @@ char	*append_to_store(char *store_fd, char *buf, ssize_t bytes_read)
 	copy_n(new_store_fd + store_fd_len, buf, bytes_read);
 	new_store_fd[store_fd_len + bytes_read] = '\0';
 	free(store_fd);
-	store_fd = NULL;
 	return (new_store_fd);
 }
 
