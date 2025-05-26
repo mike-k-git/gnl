@@ -21,10 +21,8 @@ run_test() {
 	local test_file="test_${test_name}.txt"
 	local output_file="output_${test_name}.txt"
 
-	# Prepare test file
 	printf "%s" "$test_content" >"$test_file"
 
-	# Run GNL executable on test file, capture output
 	valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC "$test_file" >"$output_file" 2>./valgrind.log
 	if [ $? -ne 0 ]; then
 		echo -e "[Valgrind] ${RED}KO${NC}"
@@ -43,8 +41,6 @@ run_test() {
 		echo "Got:"
 		echo -e "$actual_output" | od -c
 	fi
-
-	# Cleanup test files
 	rm -f "$test_file" "$output_file"
 }
 
@@ -58,7 +54,6 @@ run_stdin_test() {
 
 	printf "%s" "$test_content" >"$test_file"
 
-	# Run GNL executable on test file, capture output
 	echo -e $test_content | valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC "$test_file" >"$output_file" 2>./valgrind.log
 	if [ $? -ne 0 ]; then
 		echo -e "[Valgrind] ${RED}KO${NC}"
@@ -78,7 +73,6 @@ run_stdin_test() {
 		echo -e "$actual_output" | od -c
 	fi
 
-	# Cleanup test files
 	rm -f "$test_file" "$output_file"
 }
 
