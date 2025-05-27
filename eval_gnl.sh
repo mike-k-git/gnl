@@ -8,14 +8,14 @@ NC='\033[0m'
 
 # settings
 BUFFER_SIZES=(1 42 10000000)
-USE_VALGRIND=false
+USE_VALGRIND=true
 LOG="eval.log"
 MAIN_EMPTY="main_empty.c"
 GNL_EXEC="a.out"
 ALLOWED_FUNCTIONS=("read" "malloc" "free" "main")
 
 # paths
-SRC_DIR="."
+SRC_DIR=".."
 GNL_SRC="$SRC_DIR/get_next_line.c"
 GNL_UTILS="$SRC_DIR/get_next_line_utils.c"
 GNL_HEADER="$SRC_DIR/get_next_line.h"
@@ -38,7 +38,7 @@ print_warn() { echo -e "${YELLOW}$1${NC}"; }
 
 check_valgrind() {
 	local log_file=$1
-	if grep -qE "definitely lost: [^0]|indirectly lost: [^0]|ERROR SUMMARY: [^1-9]" "$log_file"; then
+	if grep -qE "definitely lost: [^0]|indirectly lost: [^0]|ERROR SUMMARY: [^0]*[1-9]" "$log_file"; then
 		print_ko "Valgrind"
 		cat "$log_file"
 	else
@@ -122,7 +122,7 @@ run_stdin_test() {
 
 run_neg_fd_test() {
 	if $USE_VALGRIND; then
-		output=$(valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC neg_fd 2>valgrind_neg_fd.log)
+		output=$(valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC neg_fd 2>./valgrind_neg_fd.log)
 	else
 		output=$(./$GNL_EXEC neg_fd)
 	fi
@@ -141,7 +141,7 @@ run_neg_fd_test() {
 
 run_too_big_fd_test() {
 	if $USE_VALGRIND; then
-		output=$(valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC too_big_fd 2>valgrind_too_big_fd.log)
+		output=$(valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC too_big_fd 2>./valgrind_too_big_fd.log)
 	else
 		output=$(./$GNL_EXEC too_big_fd)
 	fi
@@ -160,7 +160,7 @@ run_too_big_fd_test() {
 
 run_closed_fd_test() {
 	if $USE_VALGRIND; then
-		output=$(valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC closed_fd 2>valgrind_closed_fd.log)
+		output=$(valgrind --leak-check=full --error-exitcode=1 ./$GNL_EXEC closed_fd 2>./valgrind_closed_fd.log)
 	else
 		output=$(./$GNL_EXEC closed_fd)
 	fi
@@ -233,7 +233,7 @@ check_functions() {
 	echo -e "${GREEN}OK.${NC}"
 
 	echo -n "Checking for forbidden functions... "
-	local symbols=$(nm a.out | awk '/ U / {print $2}' | sed 's/^_*//')
+	local symbols=$(nm a.out | awk '/ U / {print $2}' | sed 's/^_*//' | sed 's/^libc_start_//')
 
 	for s in $symbols; do
 		FUNC_NAME=${s%@*}
@@ -267,7 +267,7 @@ check_functions "$GNL_SRC" "$GNL_UTILS"
 
 for BUFFER_SIZE in "${BUFFER_SIZES[@]}"; do
 	echo -e "${YELLOW}Testing get_next_line with BUFFER_SIZE=${BUFFER_SIZE}...${NC}"
-	cc -Wall -Wextra -Werror -g -D BUFFER_SIZE="$BUFFER_SIZE" get_next_line.c get_next_line_utils.c mandatory.c -o a.out
+	cc -Wall -Wextra -Werror -g -D BUFFER_SIZE="$BUFFER_SIZE" "$GNL_SRC" "$GNL_UTILS" "$MANDATORY_MAIN" -o "$GNL_EXEC"
 
 	run_neg_fd_test
 	run_too_big_fd_test
