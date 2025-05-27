@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "get_next_line.h"
+#include "../get_next_line.h"
 
 int	main(int argc, char **argv)
 {
