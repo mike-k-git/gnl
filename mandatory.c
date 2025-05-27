@@ -6,7 +6,7 @@
 /*   By: mkugan <mkugan@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 16:14:08 by mkugan            #+#    #+#             */
-/*   Updated: 2025/05/26 17:24:11 by mkugan           ###   ########.fr       */
+/*   Updated: 2025/05/27 00:07:37 by mkugan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,25 @@
 #include <string.h>
 #include "get_next_line.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    if (argc == 2 && strcmp(argv[1], "neg_fd") == 0)
+	if (argc == 2 && strcmp(argv[1], "stdin") == 0)
+	{
+		char	*line;
+		while ((line = get_next_line(0)) != NULL)
+        {
+            printf("%s", line);
+            free(line);
+        }
+        return 0;
+    }
+    
+	if (argc == 2 && strcmp(argv[1], "neg_fd") == 0)
     {
         char *line = get_next_line(-1);
         if (line)
         {
-            printf("%s\n", line);
+            printf("%s", line);
             free(line);
         }
         return 0;
@@ -34,7 +45,7 @@ int main(int argc, char **argv)
         char *line = get_next_line(10000);
         if (line)
         {
-            printf("%s\n", line);
+            printf("%s", line);
             free(line);
         }
         return 0;
@@ -48,7 +59,7 @@ int main(int argc, char **argv)
         char *line = get_next_line(fd);
         if (line)
         {
-            printf("%s\n", line);
+            printf("%s", line);
             free(line);
         }
         return 0;
